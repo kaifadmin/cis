@@ -1,0 +1,1539 @@
+<code><pre>----------practicle 1------------
+Aim: Install Terraform and create an AWS/Azure resource group using a basic Terraform script.
+Practical Code:
+Step 1: Install AWS CLI
+Download AWS CLI:
+AWS CLI Download
+Install it and restart CMD.
+Verify:
+aws --version
+Step 2: Configure AWS Credentials
+Run:
+aws configure
+Enter:
+•​ AWS Access Key ID
+•​ AWS Secret Access Key
+•​ Region:
+ap-south-1
+•​ Output:
+json
+Test credentials:
+aws sts get-caller-identity
+Step 3: Create Terraform Project
+Create folder:
+mkdir C:\terraform-aws
+cd C:\terraform-aws
+Create file:
+main.tf
+Paste this code:
+provider "aws" {
+region = "ap-south-1"
+}
+resource "aws_instance" "demo_server" {
+ami
+= "ami-0f5ee92e2d63afc18"
+instance_type = "t2.micro"
+tags = {
+Name = "TerraformDemo"
+}
+}
+Step 4: Initialize Terraform
+C:\terraform\terraform.exe init
+Step 5: Apply Configuration
+C:\terraform\terraform.exe apply
+When prompted:
+Enter a value:
+Type:
+yes
+Step 6: Verify Resource
+Open:
+AWS EC2 Console
+Go to:
+EC2 → Instances
+You will see:
+TerraformDemo
+
+
+
+
+
+
+
+------------practicle 2------------
+Aim: Create and launch a virtual machine using Terraform configuration files.
+Practical Code:
+Step 1: Create Project Folder
+Open CMD:
+mkdir C:\terraform-vm
+cd C:\terraform-vm
+Step 2: Create Terraform File
+Create a file named:
+main.tf
+Paste this code:
+provider "aws" {
+region = "ap-south-1"
+}
+resource "aws_instance" "my_vm" {
+ami
+= "ami-0f5ee92e2d63afc18"
+instance_type = "t2.micro"
+tags = {
+Name = "Terraform-VM"
+}
+}
+Step 3: Verify AWS Credentials
+Run:
+aws sts get-caller-identity
+If it shows your AWS account details, continue.
+Step 4: Initialize Terraform
+Run:
+C:\terraform\terraform.exe init
+Expected:
+Terraform has been successfully initialized!
+Step 5: Preview VM Creation
+C:\terraform\terraform.exe plan
+Step 6: Launch Virtual Machine
+C:\terraform\terraform.exe apply
+When asked:
+Enter a value:
+Type:
+yes
+Terraform will create:
+•​ EC2 Virtual Machine
+•​ Instance type:
+t2.micro
+
+
+
+
+--------------practicle 3---------------
+Aim:Use Terraform variables and modules to provision multiple cloud resources.
+Practical Code:
+Step 1: Create Main Project Folder
+mkdir C:\Users\brahm\OneDrive\Desktop\terraform-modules
+cd C:\Users\brahm\OneDrive\Desktop\terraform-modules
+Step 2: Create Module Folder
+mkdir modules
+mkdir modules\ec2
+7Step 3: Create Root main.tf
+File:
+main.tf
+Add:
+module "ec2_instance_1" {
+source
+= "./modules/ec2"
+instance_name = "Terraform-VM-1"
+}
+module "ec2_instance_2" {
+source
+= "./modules/ec2"
+instance_name = "Terraform-VM-2"
+}
+Step 4: Create Root variables.tf
+File:
+variables.tf
+Add:
+variable "region" {
+default = "ap-south-1"
+}
+Step 5: Create terraform.tfvars
+File:
+terraform.tfvars
+Add:
+region = "ap-south-1"
+Step 6: Create Module main.tf
+Path:
+modules\ec2\main.tf
+Add:
+provider "aws" {
+region = "ap-south-1"
+}
+resource "aws_instance" "vm" {
+ami
+= "ami-0f5ee92e2d63afc18"
+instance_type = "t2.micro"
+tags = {
+Name = var.instance_name
+}
+}
+Step 7: Create Module variables.tf
+Path:
+modules\ec2\variables.tf
+Add:
+variable "instance_name" {
+type = string
+}
+Step 8: Create Module outputs.tf
+Path:
+modules\ec2\outputs.tf
+Add:
+output "instance_id" {
+value = aws_instance.vm.id
+}
+Step 9: Initialize Terraform
+Go to project folder:
+cd C:\Users\brahm\OneDrive\Desktop\terraform-modules
+Run:
+"C:\Users\brahm\OneDrive\Desktop\terraform_1.15.4_windows_386\terraform.exe" init
+Step 10: Apply Configuration
+"C:\Users\brahm\OneDrive\Desktop\terraform_1.15.4_windows_386\terraform.exe" apply
+Type:
+yes
+Result
+Terraform creates:
+•​EC2 VM 1 → Terraform-VM-1
+•​EC2 VM 2 → Terraform-VM-2
+using:
+•​Variables
+•​Modules
+•​Reusable Terraform configuration
+Verify in AWS
+Open:
+AWS EC2 Console
+Go to:
+EC2 → Instances
+You will see both virtual machines.
+
+
+
+
+-------------practicle 4-------------------
+Aim: Install Ansible and create a playbook to install Apache/Nginx web server automatically.
+Practical Code:
+Install Ansible and Create Playbook for Apache/Nginx
+Step 1: Install Ansible (Ubuntu/Linux)
+Run:
+sudo apt update
+sudo apt install ansible -y
+Verify installation:
+ansible --version
+Create Apache Web Server Playbook
+Step 2: Create Project Folder
+mkdir ansible-webserver
+cd ansible-webserver
+Step 3: Create Inventory File
+Create file:
+hosts
+Add:
+[webservers]
+localhost ansible_connection=local
+Step 4: Create Apache Playbook
+Create file:
+apache.yml
+Add:
+---
+- name: Install Apache Web Server
+hosts: webservers
+become: yes
+tasks:
+- name: Install Apache
+apt:
+name: apache2
+state: present
+update_cache: yes
+- name: Start Apache Service
+service:
+name: apache2
+state: started
+enabled: yes
+Step 5: Run Playbook
+ansible-playbook -i hosts apache.yml
+Step 6: Verify Apache
+Open browser:
+http://localhost
+Apache default page will appear.
+Nginx Playbook (Alternative)
+Create file:
+nginx.yml
+Add:
+---
+- name: Install Nginx Web Server
+hosts: webservers
+become: yes
+tasks:
+- name: Install Nginx
+apt:
+name: nginx
+state: present
+update_cache: yes
+- name: Start Nginx Service
+service:
+name: nginx
+state: started
+enabled: yes
+Run:
+ansible-playbook -i hosts nginx.yml
+Check Service Status
+Apache:
+systemctl status apache2
+Nginx:
+systemctl status nginx
+Windows Users
+Ansible works best on:
+•​Ubuntu
+•​Linux
+•​WSL (Windows Subsystem for Linux)
+For Windows:
+1.​Install WSL
+2.​Install Ubuntu from Microsoft Store
+3.​Run Ansible inside Ubuntu terminal
+
+
+
+-------------practicle 5--------------------
+Aim: Create a GitHub repository and push Terraform/Ansible project files using Git commands.
+Practical Code:
+1. Go to your project folder
+cd ~/ansible-webserver
+Check files:
+ls
+2. Initialize Git
+git init
+You should see:
+Initialized empty Git repository
+3. Configure Git (if first time only)
+Set your GitHub name:
+git config --global user.name "Your Name"
+Set email:
+git config --global user.email "your-email@example.com"
+Check:
+git config --list
+4. Create .gitignore
+Open file:
+nano .gitignore
+Paste:
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+terraform.tfvars
+# Ansible
+*.retry
+# SSH Keys
+*.pem
+*.key
+# OS files
+.DS_Store
+Save:
+•​Ctrl + O
+•​Enter
+•​Ctrl + X
+Check:
+cat .gitignore
+5. Add files
+git add .
+Check status:
+git status
+6. Commit files
+git commit -m "Initial Terraform and Ansible project setup"
+7. Create repository on GitHub
+Open GitHub
+Login.
+Click:
++ → New repository
+Repository name example:
+terraform-ansible-webserver
+Optional description:
+Terraform and Ansible AWS webserver automation
+Click Create repository
+8. Copy repository URL
+Example:
+HTTPS:
+https://github.com/yourusername/terraform-ansible-webserver.git
+OR SSH:
+git@github.com:yourusername/terraform-ansible-webserver.git
+9. Connect local repo to GitHub
+Replace username/repo:
+git remote add origin https://github.com/yourusername/terraform-ansible-webserver.git
+Check:
+git remote -v
+10. Push code
+Rename branch:
+git branch -M main
+Push:
+git push -u origin main
+GitHub may ask for username/password.
+Use:
+•​ GitHub username
+•​ Personal Access Token (instead of password)
+11. Verify
+Refresh GitHub repo page.
+You should see:
+Example:
+main.tf
+inventory
+playbook.yml
+outputs.tf
+variables.tf
+.gitignore
+README.md
+Future updates
+After editing files:
+git add .
+git commit -m "Updated Terraform config"
+git push
+If you get an error like:
+remote origin already exists
+Run:
+git remote remove origin
+git remote add origin https://github.com/yourusername/terraform-ansible-webserver.git
+If push says authentication failed, I can help you create a GitHub Personal Access Token
+step-by-step too.
+
+
+
+
+----------------practicle 6 -----------------------
+Aim:Create a Virtual Private Cloud (VPC) with public and private subnets.   
+Practical Code:
+Step 1 — Open terminal
+Press:
+Ctrl + Alt + T
+Step 2 — Go to project folder
+cd ~/ansible-webserver
+Check:
+pwd
+Expected:
+/home/sagar/ansible-webserver
+Step 3 — Install Terraform
+Run:
+sudo snap install terraform --classic
+Check:
+terraform version
+Expected:
+Terraform v1.x.x
+Step 4 — Install AWS CLI
+Run:
+sudo snap install aws-cli --classic
+Check:
+aws --version
+Expected:
+aws-cli/2.x.x
+Step 5 — Get AWS Access Key
+Open AWS:
+AWS Console
+Then:
+1.​Search IAM
+2.​Open AWS Identity and Access Management
+3.​Left menu → Users
+4.​Click your username
+5.​Security credentials
+6.​Create access key
+7.​Choose CLI
+8.​Create
+9.​Copy:
+•​Access Key ID
+•​Secret Access Key
+Save the secret key now.
+Step 6 — Configure AWS CLI
+Back in terminal:
+aws configure
+Enter:
+AWS Access Key ID:
+Paste key
+AWS Secret Access Key:
+Paste secret
+Default region name:
+Type:
+ap-south-1
+Default output format:
+Type:
+json
+Step 7 — Test AWS login
+Run:
+aws sts get-caller-identity
+You should see account info.
+Step 8 — Create Terraform file
+Run:
+nano main.tf
+Paste this:
+provider "aws" {
+region = "ap-south-1"
+}
+# VPC
+resource "aws_vpc" "main" {
+cidr_block = "10.0.0.0/16"
+tags = {
+Name = "my-vpc"
+}
+}
+# Public subnet
+resource "aws_subnet" "public" {
+vpc_id= aws_vpc.main.id
+cidr_block= "10.0.1.0/24"
+map_public_ip_on_launch = true
+availability_zone
+= "ap-south-1a"
+tags = {
+Name = "public-subnet"
+}
+}
+# Private subnet
+resource "aws_subnet" "private" {
+vpc_id= aws_vpc.main.id
+cidr_block= "10.0.2.0/24"
+availability_zone = "ap-south-1a"
+tags = {
+Name = "private-subnet"
+}
+}
+# Internet Gateway
+resource "aws_internet_gateway" "igw" {
+vpc_id = aws_vpc.main.id
+tags = {
+Name = "my-igw"
+}
+}
+# Public route table
+resource "aws_route_table" "public" {
+vpc_id = aws_vpc.main.id
+route {
+cidr_block = "0.0.0.0/0"
+gateway_id = aws_internet_gateway.igw.id
+}
+}
+# Public association
+resource "aws_route_table_association" "public" {
+subnet_id
+= aws_subnet.public.id
+route_table_id = aws_route_table.public.id
+}
+# Private route table
+resource "aws_route_table" "private" {
+vpc_id = aws_vpc.main.id
+}
+# Private association
+resource "aws_route_table_association" "private" {
+subnet_id
+= aws_subnet.private.id
+route_table_id = aws_route_table.private.id
+}
+Step 9 — Save file
+Press:
+CTRL + O
+Press Enter
+Then:
+CTRL + X
+Step 10 — Check file
+ls
+You should see:
+main.tf
+Step 11 — Terraform init
+terraform init
+Expected:
+Terraform has been successfully initialized!
+Step 12 — Preview
+terraform plan
+Step 13 — Create AWS resources
+terraform apply
+Type:
+yes
+Wait.
+Expected:
+Apply complete!
+Step 14 — Verify in AWS
+Open:
+AWS VPC Console
+Check:
+Inside Amazon Virtual Private Cloud
+You should see:
+my-vpc
+public-subnet
+private-subnet
+my-igw
+route tables
+
+
+
+
+------------practicle 7----------------
+Aim: Configure route tables and security groups for secure network communication.   
+Practical Code:
+1. Project structure
+Inside your project (~/ansible-webserver), make sure you have:
+~/ansible-webserver/
+│── main.tf
+│── variables.tf
+│── terraform.tfvars
+│── outputs.tf
+Check:
+cd ~/ansible-webserver
+ls
+2. Create / update main.tf
+Open file:
+nano main.tf
+Paste this:
+provider "aws" {
+region = "ap-south-1"
+}
+# ------------------------
+# VPC
+# ------------------------
+resource "aws_vpc" "main" {
+cidr_block
+= "10.0.0.0/16"
+enable_dns_support = true
+enable_dns_hostnames = true
+tags = {
+Name = "MyVPC"
+}
+}
+# ------------------------
+# Internet Gateway
+# ------------------------
+resource "aws_internet_gateway" "gw" {
+vpc_id = aws_vpc.main.id
+tags = {
+Name = "MainGateway"
+}
+}
+# ------------------------
+# Public Subnet
+# ------------------------
+resource "aws_subnet" "public" {
+vpc_id= aws_vpc.main.id
+cidr_block= "10.0.1.0/24"
+availability_zone
+= "ap-south-1a"
+map_public_ip_on_launch = true
+tags = {
+Name = "PublicSubnet"
+}
+}
+# ------------------------
+# Private Subnet
+# ------------------------
+resource "aws_subnet" "private" {
+vpc_id= aws_vpc.main.id
+cidr_block= "10.0.2.0/24"
+availability_zone = "ap-south-1a"
+tags = {
+Name = "PrivateSubnet"
+}
+}
+# ------------------------
+# Route Table (Public)
+# ------------------------
+resource "aws_route_table" "public_rt" {
+vpc_id = aws_vpc.main.id
+route {
+cidr_block = "0.0.0.0/0"
+gateway_id = aws_internet_gateway.gw.id
+}
+tags = {
+Name = "PublicRouteTable"
+}
+}
+# ------------------------
+# Route Table Association
+# ------------------------
+resource "aws_route_table_association" "public_assoc" {
+subnet_id
+= aws_subnet.public.id
+route_table_id = aws_route_table.public_rt.id
+}
+# ------------------------
+# Security Group
+# ------------------------
+resource "aws_security_group" "web_sg" {
+name
+= "web-security-group"
+description = "Allow SSH and HTTP"
+vpc_id
+= aws_vpc.main.id
+# SSH
+ingress {
+from_port = 22
+to_port= 22
+protocol= "tcp"
+cidr_blocks = ["0.0.0.0/0"]
+}
+# HTTP
+ingress {
+from_port = 80
+to_port= 80
+protocol= "tcp"
+cidr_blocks = ["0.0.0.0/0"]
+}
+# HTTPS
+ingress {
+from_port = 443
+to_port= 443
+protocol= "tcp"
+cidr_blocks = ["0.0.0.0/0"]
+}
+# Outbound
+egress {
+from_port = 0
+to_port=0
+protocol= "-1"
+cidr_blocks = ["0.0.0.0/0"]
+}
+tags = {
+Name = "WebSecurityGroup"
+}
+}
+Save:
+CTRL + O → Enter → CTRL + X
+3. Create outputs.tf
+nano outputs.tf
+Paste:
+output "vpc_id" {
+value = aws_vpc.main.id
+}
+output "public_subnet_id" {
+value = aws_subnet.public.id
+}
+output "private_subnet_id" {
+value = aws_subnet.private.id
+}
+output "security_group_id" {
+value = aws_security_group.web_sg.id
+}
+Save.
+4. Initialize Terraform
+Run:
+terraform init
+Expected:
+Terraform has been successfully initialized
+5. Check config
+terraform validate
+Expected:
+Success! The configuration is valid.
+6. Preview resources
+terraform plan
+You should see:
+•​aws_vpc
+•​aws_subnet
+•​aws_route_table
+•​aws_security_group
+7. Apply
+terraform apply
+Type:
+yes
+Wait until:
+Apply complete!
+8. Verify in AWS Console
+Go to AWS Console → Amazon VPC
+Check:
+VPC
+You should see:
+Amazon Web Services VPC named MyVPC
+Subnets
+•​PublicSubnet
+•​PrivateSubnet
+Route Tables
+PublicRouteTable should show:
+0.0.0.0/0 → Internet Gateway
+Security Groups
+WebSecurityGroup:
+Inbound:
+22 SSH
+80 HTTP
+443 HTTPS
+Outbound:
+All traffic
+That finishes route tables + security groups.
+Next after this is usually:
+Launch EC2 instance in public subnet → attach key pair → use Ansible to configure web server.
+
+
+
+
+
+
+------------practicle 8--------------
+Aim: Configure VPC Peering between two virtual networks..
+Practical Code:
+Step 1 — Open terminal
+Go to your project folder:
+cd ~/ansible-webserver
+Check files:
+ls
+You should see:
+main.tf
+Step 2 — Open main.tf
+Run:
+nano main.tf
+Delete old content.
+Paste this:
+provider "aws" {
+region = "ap-southeast-2"
+}
+# VPC A
+resource "aws_vpc" "vpc_a" {
+cidr_block = "10.0.0.0/16"
+tags = {
+Name = "vpc-a"
+}
+}
+# Subnet A
+resource "aws_subnet" "subnet_a" {
+vpc_id= aws_vpc.vpc_a.id
+cidr_block= "10.0.1.0/24"
+availability_zone
+= "ap-southeast-2a"
+map_public_ip_on_launch = true
+tags = {
+Name = "subnet-a"
+}
+}
+# VPC B
+resource "aws_vpc" "vpc_b" {
+cidr_block = "192.168.0.0/16"
+tags = {
+Name = "vpc-b"
+}
+}
+# Subnet B
+resource "aws_subnet" "subnet_b" {
+vpc_id= aws_vpc.vpc_b.id
+cidr_block= "192.168.1.0/24"
+availability_zone
+= "ap-southeast-2b"
+map_public_ip_on_launch = true
+tags = {
+Name = "subnet-b"
+}
+}
+# Peering
+resource "aws_vpc_peering_connection" "peer" {
+vpc_id
+= aws_vpc.vpc_a.id
+peer_vpc_id = aws_vpc.vpc_b.id
+auto_accept = true
+tags = {
+Name = "peer-a-b"
+}
+}
+# Route A -> B
+resource "aws_route" "a_to_b" {
+route_table_id
+= aws_vpc.vpc_a.main_route_table_id
+destination_cidr_block = "192.168.0.0/16"
+vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+}
+# Route B -> A
+resource "aws_route" "b_to_a" {
+route_table_id
+= aws_vpc.vpc_b.main_route_table_id
+destination_cidr_block = "10.0.0.0/16"
+vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+}
+Save:
+Ctrl + O
+Press Enter
+Exit:
+Ctrl + X
+Step 3 — Initialize Terraform
+Run:
+terraform init
+Expected:
+Terraform has been successfully initialized
+Step 4 — Check AWS region
+Run:
+aws configure list
+Region should be:
+ap-southeast-2
+If not:
+export AWS_REGION=ap-southeast-2
+Step 5 — Check old VPCs
+Open:
+AWS VPC Console (Sydney)
+Top-right region:
+Asia Pacific (Sydney)
+Click:
+Your VPCs
+Step 6 — If more than 4 VPCs
+Delete unused ones.
+Select VPC
+Click:
+Actions → Delete VPC
+Keep default VPC if unsure.
+Step 7 — Terraform plan
+Back to terminal:
+terraform plan
+You should see:
+Plan: 6 to add
+(or similar)
+Step 8 — Apply
+Run:
+terraform apply
+Type:
+yes
+Wait.
+Expected:
+Apply complete!
+Step 9 — Verify AWS
+Open VPC console again:
+AWS VPC Console (Sydney)
+Check:
+Your VPCs
+You should see:
+vpc-a
+vpc-b
+Step 10 — Check peering
+Left menu:
+Peering connections
+You should see:
+peer-a-b
+Status: Active
+Step 11 — Check subnets
+Left menu:
+Subnets
+You should see:
+subnet-a → 10.0.1.0/24
+subnet-b → 192.168.1.0/24
+Step 12 — Check routes
+Route tables:
+VPC-A:
+192.168.0.0/16 → peer
+VPC-B:
+10.0.0.0/16 → peer
+
+
+
+
+------------practicle 9-----------
+Aim: Configure VPC Peering between two virtual networks.
+Practical Code:
+Step 1 — Open ec2.tf
+In terminal:
+nano ec2.tf
+Delete old text.
+Paste this exactly:
+resource "aws_launch_template" "web" {
+name_prefix = "web-template"
+image_id
+= "ami-0d1b5a8c13042c939"
+instance_type = "t2.micro"
+vpc_security_group_ids = [
+aws_security_group.web_sg.id
+]
+user_data = base64encode(file("userdata.sh"))
+}
+Save:
+Ctrl + O
+Press:
+Enter
+Exit:
+Ctrl + X
+Step 2 — Check file
+Run:
+cat ec2.tf
+You should see the same code.
+Step 3 — Terraform plan
+Run:
+terraform plan
+Wait.
+If no red error:
+Go next.
+Step 4 — Apply
+Run:
+terraform apply
+Type:
+yes
+Press Enter.
+Wait 2–5 min.
+Step 5 — Check created resources
+Run:
+terraform state list
+You should see resources like:
+aws_vpc.main
+aws_subnet.public1
+aws_subnet.public2
+aws_lb.web
+aws_autoscaling_group.web
+Step 6 — Get Load Balancer DNS
+Run:
+terraform state show aws_lb.web
+Find:
+dns_name =
+Example:
+web-alb-xxxx.us-east-2.elb.amazonaws.com
+Step 7 — Open browser
+Open:
+http://YOUR-DNS
+Expected:
+Server running from Auto Scaling Group
+Do Step 1 now (nano ec2.tf) and paste that file.
+Then run:
+terraform plan
+
+
+
+
+-----------practicle 10-------------
+Aim: Configure Route 53 DNS service and connect a domain/subdomain to a cloud-hosted
+Practical Code:
+1. Open Route 53
+Go to AWS Console → Amazon Route 53
+Or directly: Amazon Route 53 Console
+2. Register or use your existing domain
+Option A: Already have a domain
+Example: example.com
+Use it directly.
+Option B: Buy one from AWS
+In Route 53:
+•​
+Click Registered domains
+•​
+Click Register domain
+•​
+Search domain name
+•​
+Purchase it
+AWS will automatically connect DNS.
+3. Create a Hosted Zone
+In Route 53:
+•​
+Click Hosted zones
+•​
+Click Create hosted zone
+Fill:
+•​
+Domain name: example.com
+•​
+Type: Public hosted zone
+Click Create hosted zone
+AWS creates:
+•​
+NS record
+•​
+SOA record
+Example:
+example.com
+NS ns-123.awsdns.com
+4. Point your domain to AWS
+If domain was bought outside AWS (like GoDaddy or Namecheap):
+Copy the 4 NS records from Route 53.
+Then go to registrar:
+•​Domain Management
+•​Nameservers
+•​Replace existing with AWS NS records
+Save.
+DNS propagation may take:
+•​5 minutes to
+•​24 hours
+5. Find your application endpoint
+Depending on hosting:
+EC2 instance
+Example public IP:
+13.211.xxx.xxx
+Load Balancer
+Example DNS:
+myapp-alb-123.ap-southeast-2.elb.amazonaws.com
+6. Create DNS record
+Inside Hosted Zone → Create record
+Root domain
+Example:
+example.com
+Choose:
+•​
+Record name: blank
+•​
+Type: A
+If EC2 IP:
+•​
+Value = public IP
+Example:
+13.211.xxx.xxx
+If using Load Balancer (recommended)
+Choose:
+•​
+Type = A
+•​
+Alias = ON
+Select:
+•​
+Alias to Application Load Balancer
+•​
+Choose ALB
+Save.
+7. Add subdomain
+Example:
+app.example.com
+Create record:
+•​
+Name = app
+•​
+Type = A
+Then:
+EC2
+Public IP
+OR
+ALB
+Alias → select load balancer
+Save
+Example result:
+Name​ Type​ Value
+example.com​ A​
+ALB
+app.example.com​
+A​
+8. Test DNS
+Open terminal:
+Linux:
+nslookup example.com
+or
+dig example.com
+Check browser:
+https://example.com
+EC2/ALB
+Subdomain:
+https://app.example.com
+9. Optional HTTPS (recommended)
+Use AWS Certificate Manager
+Console: AWS Certificate Manager
+Steps:
+•​
+Request certificate
+•​
+Add:
+example.com
+*.example.com
+Validate with Route 53
+Attach cert to:
+•​
+Application Load Balancer
+Then HTTPS works.
+Example architecture
+Internet
+↓
+Route 53
+↓
+example.com
+↓
+Application Load Balancer
+↓
+EC2 instance
+↓
+Web App
+For your current AWS project (ap-southeast-2)
+Typical:
+Domain: myproject.com
+Subdomain: app.myproject.com
+ALB: terraform-alb.ap-southeast-2.elb.amazonaws.com
+Route 53:
+A myproject.com → ALB
+A app → ALB
+Then open:
+https://app.myproject.com
+That connects your domain/subdomain to your cloud-hosted app.
+If you tell me:
+•​
+your domain name
+•​
+whether app is on EC2 or ALB
+•​
+whether Terraform is managing AWS
+…I can give you the exact record values or Terraform code.
+
+
+
+
+
+
+
+--------practicle 11--------------
+Aim: Create Docker images and run containers for a simple web application.
+Practical Code:
+Step 1: Create project folder
+mkdir docker-web-app
+cd docker-web-app
+Step 2: Create web application file
+nano index.html
+Add sample HTML code
+<!DOCTYPE html>
+<html>
+<head>
+<title>Docker Web App</title>
+</head>
+<body>
+<h1>Welcome to Docker Container</h1>
+</body>
+</html>
+Step 3: Create Dockerfile
+nano Dockerfile
+Add Dockerfile configuration
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+EXPOSE 80
+Step 4: Build Docker image
+docker build -t webapp-image .
+Step 5: Run Docker container
+docker run -d -p 8080:80 --name webapp-container webapp-image
+Step 6: Check running container
+docker ps
+Step 7: Verify application
+curl http://localhost:8080
+
+
+
+
+
+
+
+---------practicle 12 --------------
+Aim: Deploy a multi-container application using Docker Compose.
+Practical Code:
+Step 1: Create project folder
+mkdir docker-compose-app
+cd docker-compose-app
+Step 2: Create application file
+nano index.html
+Add sample HTML code
+<!DOCTYPE html>
+<html>
+<head>
+<title>Docker Compose App</title>
+</head>
+<body>
+<h1>Welcome to Multi-Container Application</h1>
+</body>
+</html>
+Step 3: Create Dockerfile
+nano Dockerfile
+Add Dockerfile
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+EXPOSE 80
+Step 4: Create Docker Compose file
+nano docker-compose.yml
+Add configuration
+version: '3'
+services:
+web:
+build: .
+ports:
+- "8080:80"
+database:
+image: mysql:5.7
+environment:
+MYSQL_ROOT_PASSWORD: root123
+Step 5: Start services
+docker-compose up -d
+Step 6: Check running containers
+docker ps
+Step 7: Verify application
+curl http://localhost:8080
+
+
+
+
+
+
+
+
+---------practicle 13---------------
+Aim: Install Kubernetes using Minikube and deploy an application using Pods and Deployments.
+Practical Code:
+1. Open Terminal
+Go to your home folder:
+cd ~
+2. Create project folder
+mkdir kubernetes-minikube
+Enter it:
+cd kubernetes-minikube
+Check location:
+pwd
+Example:
+/home/sagar/kubernetes-minikube
+Everything below runs inside this folder.
+3. Update system
+sudo apt update && sudo apt upgrade -y
+4. Install Docker
+sudo apt install docker.io -y
+Enable/start:
+sudo systemctl enable docker
+sudo systemctl start docker
+Check:
+sudo systemctl status docker
+Add your user:
+sudo usermod -aG docker $USER
+Apply:
+newgrp docker
+Check:
+docker --version
+5. Install kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s
+https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+Check:
+kubectl version --client
+6. Install Minikube
+Download:
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+Install:
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+Check:
+minikube version
+7. Start Minikube
+minikube start --driver=docker
+Check:
+minikube status
+8. Create pod.yaml inside folder
+You are still inside:
+~/kubernetes-minikube
+Create:
+nano pod.yaml
+Paste:
+apiVersion: v1
+kind: Pod
+metadata:
+name: nginx-pod
+spec:
+containers:
+- name: nginx
+image: nginx
+ports:
+- containerPort: 80
+Save:
+CTRL+O → Enter → CTRL+X
+Run:
+kubectl apply -f pod.yaml
+Check:
+kubectl get pods
+9. Open Pod
+kubectl port-forward pod/nginx-pod 8080:80
+Browser:
+http://localhost:8080
+Stop:
+CTRL+C
+10. Create deployment.yaml
+nano deployment.yaml
+Paste:
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+name: nginx-deployment
+spec:
+replicas: 3
+selector:
+matchLabels:
+app: nginx
+template:
+metadata:
+labels:
+app: nginx
+spec:
+containers:
+- name: nginx
+image: nginx
+ports:
+- containerPort: 80
+Save.
+Run:
+kubectl apply -f deployment.yaml
+Check:
+kubectl get deployments
+11. Expose Deployment
+kubectl expose deployment nginx-deployment --type=NodePort --port=80
+Check:
+kubectl get svc
+Open browser:
+minikube service nginx-deployment
+12. Scale
+kubectl scale deployment nginx-deployment --replicas=5
+Check:
+kubectl get pods
+13. Folder structure
+Your folder will look like:
+kubernetes-minikube/
+├── pod.yaml
+└── deployment.yaml
+Check:
+ls
+14. Stop/delete
+kubectl delete -f pod.yaml
+kubectl delete -f deployment.yaml
+kubectl delete svc nginx-deployment
+minikube stop
+minikube delete
+So the key point:
+First:
+cd ~
+mkdir kubernetes-minikube
+cd kubernetes-minikube
+Then install Docker/kubectl/Minikube
+Then create:
+nano pod.yaml
+nano deployment.yaml
+Then run:
+kubectl apply -f pod.yaml
+kubectl apply -f deployment.yaml
+
+
+
+
+
+
+
+
+-------------practilcle 14-----------
+Aim: Configure Kubernetes Services, ConfigMaps, Secrets, Persistent Volumes, and implement IAM
+and backup policies for cloud resources.
+Practical Code:
+Step 1 — Open terminal
+Press:
+Ctrl + Alt + T
+Step 2 — Go to home folder
+Type:
+cd ~
+Press Enter
+Step 3 — Create new folder
+Type:
+mkdir kubernetes-resources
+Press Enter
+Step 4 — Enter folder
+Type:
+cd kubernetes-resources
+Press Enter
+Step 5 — Confirm folder
+Type:
+pwd
+Press Enter
+You should see something like:
+/home/sagar/kubernetes-resources
+Step 6 — Create deployment file
+Type:
+nano nginx-deployment.yaml
+Press Enter
+Step 7 — Paste this
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+name: nginx-deployment
+spec:
+replicas: 2
+selector:
+matchLabels:
+app: nginx
+template:
+metadata:
+labels:
+app: nginx
+spec:
+containers:
+- name: nginx
+image: nginx
+ports:
+- containerPort: 80
+Step 8 — Save file
+Press:
+Ctrl + O
+Then press:
+Enter
+Then exit:
+Ctrl + X
+Step 9 — Create service file
+Type:
+nano nginx-service.yaml
+Press Enter
+Paste:
+apiVersion: v1
+kind: Service
+metadata:
+name: nginx-service
+spec:
+selector:
+app: nginx
+ports:
+- protocol: TCP
+port: 80
+targetPort: 80
+type: NodePort
+Save:
+Ctrl + O → Enter
+Exit:
+Ctrl + X
+Step 10 — Create ConfigMap
+Type:
+nano configmap.yaml
+Paste:
+apiVersion: v1
+kind: ConfigMap
+metadata:
+name: app-config
+data:
+APP_MODE: production
+DB_HOST: mysql-service
+Save:
+Ctrl + O
+Enter
+Exit:
+Ctrl + X
+Step 11 — Create Persistent Volume
+Type:
+nano pv.yaml
+Paste:
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+name: my-pv
+spec:
+capacity:
+storage: 1Gi
+accessModes:
+- ReadWriteOnce
+hostPath:
+path: /data/my-pv
+Save and exit.
+Step 12 — Create Persistent Volume Claim
+Type:
+nano pvc.yaml
+Paste:
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+name: my-pvc
+spec:
+accessModes:
+- ReadWriteOnce
+resources:
+requests:
+storage: 1Gi
+Save:
+Ctrl + O
+Enter
+Exit:
+Ctrl + X
+Step 13 — Check files
+Type:
+ls
+You should see:
+configmap.yaml
+nginx-deployment.yaml
+nginx-service.yaml
+pv.yaml
+pvc.yaml
+Step 14 — Apply deployment
+Type:
+kubectl apply -f nginx-deployment.yaml
+Step 15 — Apply service
+Type:
+kubectl apply -f nginx-service.yaml
+Step 16 — Apply ConfigMap
+Type:
+kubectl apply -f configmap.yaml
+Step 17 — Apply PV
+Type:
+kubectl apply -f pv.yaml
+Step 18 — Apply PVC
+Type:
+kubectl apply -f pvc.yaml
+Step 19 — Check pods
+Type:
+kubectl get pods
+Step 20 — Check service
+Type:
+kubectl get svc
+Step 21 — Check ConfigMap
+Type:
+kubectl get configmap
+Step 22 — Check volume
+Type:
+kubectl get pv
+kubectl get pvc
+</pre></code>
