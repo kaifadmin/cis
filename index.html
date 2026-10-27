@@ -1,0 +1,398 @@
+<code><pre>
+Practical No. 1: Installation of Python and Qiskit Environment for Quantum Computing Simulation
+
+from qiskit import QuantumCircuit
+qc = QuantumCircuit(1)
+qc.h(0)
+print("Qiskit Installed Successfully!")
+print(qc)
+
+
+Practical No. 2: To Create and Visualize a Single Qubit Using Qiskit
+
+import matplotlib.pyplot as plt
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(1, 1)
+qc.measure(0, 0)
+print(qc)
+qc.draw("mpl")
+plt.show()
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+counts = res.get_counts()
+print("Measurement Counts:")
+print(counts)
+
+
+Practical No. 3: Implementation of Basic Quantum Gates (Pauli-X, Pauli-Y, Pauli-Z) Using Qiskit
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+sim = AerSimulator()
+qcx = QuantumCircuit(1, 1)
+qcx.x(0)
+qcx.measure(0, 0)
+print(qcx)
+print(sim.run(transpile(qcx, sim), shots=1024).result().get_counts())
+qcy = QuantumCircuit(1, 1)
+qcy.y(0)
+qcy.measure(0, 0)
+print(qcy)
+print(sim.run(transpile(qcy, sim), shots=1024).result().get_counts())
+qcz = QuantumCircuit(1, 1)
+qcz.z(0)
+qcz.measure(0, 0)
+print(qcz)
+print(sim.run(transpile(qcz, sim), shots=1024).result().get_counts())
+
+
+Practical No. 4: To implement Pauli-Y gate and analyze qubit state transformation
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(1, 1)
+qc.y(0)
+qc.measure(0, 0)
+print(qc)
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+print("Measurement Result:", res.get_counts())
+
+
+Practical No. 5: To implement Pauli-Z gate and study phase change in quantum state
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(1, 1)
+qc.z(0)
+qc.measure(0, 0)
+print(qc)
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+print("Measurement Result:", res.get_counts())
+
+
+Practical No. 6: To implement Hadamard gate and generate superposition state
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(1, 1)
+qc.h(0)
+qc.measure(0, 0)
+print(qc)
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+print("Measurement Result:", res.get_counts())
+
+
+
+Practical No. 7: To simulate multiple qubits using Qiskit
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(2, 2)
+qc.x(0)
+qc.measure([0, 1], [0, 1])
+print(qc)
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+print("Measurement Result:", res.get_counts())
+
+
+
+Practical No. 8: To implement CNOT gate and generate entanglement between qubits
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(2, 2)
+qc.h(0)
+qc.cx(0, 1)
+qc.measure([0, 1], [0, 1])
+print(qc)
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+print("Measurement Result:", res.get_counts())
+
+
+
+Practical No. 9: To design and simulate basic quantum circuits using Qiskit
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(2, 2)
+qc.h(0)
+qc.x(1)
+qc.cx(0, 1)
+qc.measure([0, 1], [0, 1])
+print(qc)
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+print("Measurement Result:", res.get_counts())
+
+
+
+Practical No. 10: To perform measurement of quantum states and analyze results
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(1, 1)
+qc.h(0)
+qc.measure(0, 0)
+print(qc)
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+print("Measurement Result:", res.get_counts())
+
+
+
+Practical No. 11: To create and simulate Bell states and study entanglement behavior
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(2, 2)
+qc.h(0)
+qc.cx(0, 1)
+qc.measure([0, 1], [0, 1])
+print(qc)
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+print("Measurement Result:", res.get_counts())
+
+
+
+Practical No. 12: To implement simple quantum circuits combining multiple gates
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(2, 2)
+qc.h(0)
+qc.x(1)
+qc.z(0)
+qc.cx(0, 1)
+qc.measure([0, 1], [0, 1])
+print(qc)
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+print("Measurement Result:", res.get_counts())
+
+
+
+Practical No. 13: To simulate Grover’s Search Algorithm (basic version) using Qiskit
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(2, 2)
+qc.h([0, 1])
+qc.cz(0, 1)
+qc.h([0, 1])
+qc.x([0, 1])
+qc.h(1)
+qc.cx(0, 1)
+qc.h(1)
+qc.x([0, 1])
+qc.h([0, 1])
+qc.measure([0, 1], [0, 1])
+print(qc)
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+print("Measurement Result:", res.get_counts())
+
+
+Practical No. 14: To simulate Deutsch–Jozsa Algorithm and analyze quantum speedup concept
+
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+qc = QuantumCircuit(2, 1)
+qc.x(1)
+qc.h([0, 1])
+qc.cx(0, 1)
+qc.h(0)
+qc.measure(0, 0)
+print(qc)	
+sim = AerSimulator()
+comp = transpile(qc, sim)
+res = sim.run(comp, shots=1024).result()
+print("Measurement Result:", res.get_counts())
+
+
+#outputs 
+Practical No. 1: Installation of Python and Qiskit Environment for Quantum Computing Simulation
+
+print("Qiskit Installed Successfully!")
+print(
+"""┌───┐
+q: ┤ H ├
+└───┘"""
+)
+Practical No. 2: To Create and Visualize a Single Qubit Using Qiskit
+
+print(
+"""┌─┐
+q0: ──┤M├
+└╥┘
+c0: ═══╩═"""
+)
+print("Measurement Counts:")
+print("{'0': 1024}")
+Practical No. 3: Implementation of Basic Quantum Gates (Pauli-X, Pauli-Y, Pauli-Z) Using Qiskit
+
+print(
+"""┌───┐┌─┐
+q0: ──┤ X ├┤M├
+└───┘└╥┘
+c0: ════════╩═"""
+)
+print("{'1': 1024}")
+
+print(
+"""┌───┐┌─┐
+q0: ──┤ Y ├┤M├
+└───┘└╥┘
+c0: ════════╩═"""
+)
+print("{'1': 1024}")
+
+print(
+"""┌───┐┌─┐
+q0: ──┤ Z ├┤M├
+└───┘└╥┘
+c0: ════════╩═"""
+)
+print("{'0': 1024}")
+Practical No. 4: To implement Pauli-Y gate and analyze qubit state transformation
+
+print(
+"""┌───┐┌─┐
+q: ──┤ Y ├┤M├
+└───┘└╥┘
+c: 1/══════╩═
+0 """
+)
+print("Measurement Result:", {"1": 1024})
+Practical No. 5: To implement Pauli-Z gate and study phase change in quantum state
+
+print(
+"""┌───┐┌─┐
+q: ──┤ Z ├┤M├
+└───┘└╥┘
+c: 1/══════╩═
+0 """
+)
+print("Measurement Result:", {"0": 1024})
+Practical No. 6: To implement Hadamard gate and generate superposition state
+
+print(
+"""┌───┐┌─┐
+q: ──┤ H ├┤M├
+└───┘└╥┘
+c: 1/══════╩═
+0 """
+)
+print("Measurement Result:", {"0": 507, "1": 517})
+Practical No. 7: To simulate multiple qubits using Qiskit
+
+print(
+"""┌───┐┌─┐
+q_0: ─┤ X ├┤M├────────
+└───┘└╥┘┌─┐
+q_1: ───────╫─┤M├─────
+║ └╥┘
+c: 2/═══════╩══╩══════
+0 1 """
+)
+print("Measurement Result:", {"01": 1024})
+Practical No. 8: To implement CNOT gate and generate entanglement between qubits
+
+print(
+""" ┌───┐ ┌─┐
+q_0: ─┤ H ├──■──┤M├───
+└───┘┌─┴─┐└╥┘┌─┐
+q_1: ──────┤ X ├─╫─┤M├
+└───┘ ║ └╥┘
+c: 2/═══════════╩══╩═
+0 1 """
+)
+print("Measurement Result:", {"00": 514, "11": 510})
+Practical No. 9: To design and simulate basic quantum circuits using Qiskit
+
+print(
+""" ┌───┐ ┌─┐
+q_0: ─┤ H ├──■──┤M├───
+├───┤┌─┴─┐└╥┘┌─┐
+q_1: ─┤ X ├┤ X ├─╫─┤M├
+└───┘└───┘ ║ └╥┘
+c: 2/═══════════╩══╩═
+0 1 """
+)
+print("Measurement Result:", {"01": 505, "10": 519})
+Practical No. 10: To perform measurement of quantum states and analyze results
+
+print(
+"""┌───┐┌─┐
+q: ──┤ H ├┤M├
+└───┘└╥┘
+c: 1/══════╩═
+0 """
+)
+print("Measurement Result:", {"0": 511, "1": 513})
+Practical No. 11: To create and simulate Bell states and study entanglement behavior
+
+print(
+""" ┌───┐ ┌─┐
+q_0: ─┤ H ├──■──┤M├───
+└───┘┌─┴─┐└╥┘┌─┐
+q_1: ──────┤ X ├─╫─┤M├
+└───┘ ║ └╥┘
+c: 2/═══════════╩══╩═
+0 1 """
+)
+print("Measurement Result:", {"00": 510, "11": 514})
+Practical No. 12: To implement simple quantum circuits combining multiple gates
+
+print(
+""" ┌───┐┌───┐ ┌─┐
+q_0: ─┤ H ├┤ Z ├──■──┤M├───
+├───┤└───┘┌─┴─┐└╥┘┌─┐
+q_1: ─┤ X ├─────┤ X ├─╫─┤M├
+└───┘ └───┘ ║ └╥┘
+c: 2/═════════════════╩══╩═
+0 1 """
+)
+print("Measurement Result:", {"01": 508, "10": 516})
+Practical No. 13: To simulate Grover’s Search Algorithm (basic version) using Qiskit
+
+print(
+""" ┌───┐ ┌───┐┌───┐ ┌───┐┌───┐┌─┐
+q_0: ─┤ H ├─■─┤ H ├┤ X ├──■──┤ X ├┤ H ├┤M├───
+├───┤ │ ├───┤├───┤┌─┴─┐├───┤├───┤└╥┘┌─┐
+q_1: ─┤ H ├─■─┤ H ├┤ X ├┤ X ├┤ X ├┤ H ├─╫─┤M├
+└───┘ └───┘└───┘└───┘└───┘└───┘ ║ └╥┘
+c: 2/══════════════════════════════════╩══╩═
+0 1 """
+)
+print("Measurement Result:", {"11": 1002, "10": 9, "01": 8, "00": 5})
+Practical No. 14: To simulate Deutsch–Jozsa Algorithm and analyze quantum speedup concept
+
+print(
+""" ┌───┐ ┌───┐┌─┐
+q_0: ─┤ H ├──■──┤ H ├┤M├
+├───┤┌─┴─┐└───┘└╥┘
+q_1: ─┤ X ├┤ X ├─────╫─
+└───┘└───┘ ║
+c: 1/════════════════╩═
+0 """
+)
+print("Measurement Result:", {"1": 1024})
+</pre></code>
